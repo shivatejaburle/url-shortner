@@ -1,7 +1,44 @@
 {% extends 'base_master.html' %}
+{% load static %}
+
+{% block title %}
+    Short URL
+{% endblock title %}
 
 {% block content %}
+    <style>
+        .link-color {
+            --bs-link-hover-color-rgb: 25, 135, 84;
+        }
+    </style>
     <div class="container">
-        <h1>URL Shortner</h1>
+        <img src="{% static 'shortner/img/short-url.png' %}" class="img-fluid" alt="short-url">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="urlInput" class="form-label fs-1">Enter URL</label>
+                <input type="url" title="urlInput" name="urlInput" class="form-control form-control-lg" id="urlInput" placeholder="https://...." required>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Short URL</button>
+        </form>
+        {% if shortened_url %}
+            <div class="alert alert-success mt-3 fs-2" role="alert">
+                <strong>Short URL:</strong><br>
+                <a class="icon-link icon-link-hover link-color" target="_blank" href="{{ shortened_url }}">
+                    {{ shortened_url }}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                    </svg>
+                </a>
+            </div>
+        {% elif error %}
+            <div class="alert alert-danger mt-3 fs-3" role="alert">
+                {{ error }}
+            </div>
+        {% else %}
+            <div class="alert alert-info mt-3" role="alert">
+                Please enter URL and click on 'Get Short URL'
+            </div>
+        {% endif %}
     </div>
 {% endblock content %}
